@@ -43,23 +43,10 @@ pipeline {
                 branch 'master'
             }
             steps {
-                 emailext mimeType: 'text/html',
-                 subject: "[Jenkins]${currentBuild.fullDisplayName}",
-                 to: "tom@xxx.com",
-                 body: '''<a href="${BUILD_URL}input">click to approve</a>'''
-
-            def userInput = input id: 'userInput',
-                              message: 'Let\'s promote?', 
-                              submitterParameter: 'submitter',
-                              submitter: 'tom',
-                              parameters: [
-                                [$class: 'TextParameterDefinition', defaultValue: 'sit', description: 'Environment', name: 'env'],
-                                [$class: 'TextParameterDefinition', defaultValue: 'k8s', description: 'Target', name: 'target']]
-
-            echo ("Env: "+userInput['env'])
-            echo ("Target: "+userInput['target'])
-            echo ("submitted by: "+userInput['submitter'])
-                
+               mail (to: 'devops@acme.com',
+                     subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for input",
+                     body: "Please go to ${env.BUILD_URL}.");
+               
                 input 'Does the staging environment look OK?'
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
