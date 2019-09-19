@@ -43,7 +43,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-               mail (to: 'devops@acme.com',
+               mail (to: 'rachid.halloul@hms.com',
                      subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is waiting for input",
                      body: "Please go to ${env.BUILD_URL}.");
                
